@@ -3,7 +3,7 @@ import { connectionMongo } from '../configs';
 import { DataModel } from '../interfaces/base';
 
 const UserSchema = new Schema({
-  birthDay: Date,
+  birthDay: { type: Date },
   country: { type: String },
   deletedAt: { type: Date },
   docNumber: { type: String },
