@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import rolActuator from '../actuators/rol.actuator';
+import roleActuator from '../actuators/role.actuator';
 import { errorResponse, successResponse } from '../utils';
 
-class RolController {
+class RoleController {
   async initializeRolesAndPermissions(_: Request, res: Response) {
     try {
-      const defaultValues = await rolActuator.createRolesAndPermissionsDefault();
+      const defaultValues = await roleActuator.createRolesAndPermissionsDefault();
         
       return successResponse({ data: defaultValues, res });
     } catch (error) {
@@ -14,4 +14,4 @@ class RolController {
   }
 }
 
-export default new RolController();
+export default new RoleController();

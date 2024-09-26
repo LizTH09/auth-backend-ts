@@ -1,8 +1,8 @@
-import RolModel from '../models/rol.model';
+import RoleModel from '../models/role.model';
 import PermissionModel from '../models/permission.model';
 import { Types } from 'mongoose';
 
-class RolActuator {
+class RoleActuator {
   async createRolesAndPermissionsDefault() {
     const permissions = [
       {
@@ -44,9 +44,9 @@ class RolActuator {
     const newPermissions = permissions.filter(({ code }) => !(permissionCodes.includes(code)));
     await PermissionModel.insertMany(newPermissions);
 
-    const rolesName = await RolModel.distinct('name', {});
+    const rolesName = await RoleModel.distinct('name', {});
     const newRoles = roles.filter(({ name }) => !(rolesName.includes(name)));
-    await RolModel.insertMany(newRoles);
+    await RoleModel.insertMany(newRoles);
 
     return {
       insertedPermissions: newPermissions.length,
@@ -55,4 +55,4 @@ class RolActuator {
   }
 }
 
-export default new RolActuator();
+export default new RoleActuator();

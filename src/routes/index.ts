@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import testRouter from './test.routes';
-import rolRouter from './rol.routes';
+import roleRouter from './role.routes';
 
 const mainRouter = Router();
 
 // add some routes
 mainRouter.use('/test', testRouter);
-mainRouter.use('/rol', rolRouter);
+mainRouter.use('/role', roleRouter);
 
 export default mainRouter;

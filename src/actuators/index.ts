@@ -1,2 +1,2 @@
-export * from './rol.actuator';
+export * from './role.actuator';
 export * from './test.actuator';

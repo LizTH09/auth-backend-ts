@@ -1,13 +1,13 @@
 import { Types, Schema } from 'mongoose';
 import { connectionMongo } from '../configs';
 
-interface IRolSchema {
+interface IRoleSchema {
     _id: Types.ObjectId,
     name: string,
     permissions: Types.ObjectId[],
 }
 
-const RolSchema = new Schema<IRolSchema>({
+const RoleSchema = new Schema<IRoleSchema>({
   _id: Types.ObjectId,
   name: {
     required: true,
@@ -16,6 +16,6 @@ const RolSchema = new Schema<IRolSchema>({
   permissions: [ { type: Types.ObjectId } ],
 });
 
-const RolModel = connectionMongo.model<IRolSchema>('rol', RolSchema);
+const RoleModel = connectionMongo.model<IRoleSchema>('role', RoleSchema);
 
-export default RolModel;
+export default RoleModel;
