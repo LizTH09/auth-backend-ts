@@ -1,31 +1,8 @@
-import { Schema, Types } from 'mongoose';
+import { Document, InferSchemaType, Schema, Types } from 'mongoose';
 import { connectionMongo } from '../configs';
+import { DataModel } from '../interfaces/base';
 
-interface IUserSchema {
-    firstName: string
-    lastName: string
-    email: string
-    photo?: string
-    gender?: string
-    phone?: string
-    birthDay?: Date
-    country?: string
-    docNumber?: string
-    docType?: 'DNI' | 'CE' | 'CURP'
-    localAccount?: {
-        password: string
-    }
-    externalAccount: [
-        {
-            id: string
-            provider: string
-        }]
-    roleId?: Types.ObjectId
-    status: 'ACTIVED' | 'DELETED' | 'SUSPENDED' | 'PENDING'
-    deletedAt?: Date
-}
-
-const UserSchema = new Schema<IUserSchema>({
+const UserSchema = new Schema({
   birthDay: Date,
   country: { type: String },
   deletedAt: Date,
@@ -67,6 +44,8 @@ const UserSchema = new Schema<IUserSchema>({
   }
 }, { timestamps: true });
 
-const UserModel = connectionMongo.model<IUserSchema>('user', UserSchema);
+export type User = DataModel<InferSchemaType<typeof UserSchema>>
+
+const UserModel = connectionMongo.model<User & Document>('user', UserSchema);
 
 export default UserModel;

@@ -1,14 +1,8 @@
-import { Types, Schema } from 'mongoose';
+import { Types, Schema, InferSchemaType, Document } from 'mongoose';
 import { connectionMongo } from '../configs';
+import { DataModel } from '../interfaces/base';
 
-interface IRoleSchema {
-    _id: Types.ObjectId,
-    name: string,
-    permissions: Types.ObjectId[],
-}
-
-const RoleSchema = new Schema<IRoleSchema>({
-  _id: Types.ObjectId,
+const RoleSchema = new Schema({
   name: {
     required: true,
     type: String
@@ -16,6 +10,8 @@ const RoleSchema = new Schema<IRoleSchema>({
   permissions: [ { type: Types.ObjectId } ],
 });
 
-const RoleModel = connectionMongo.model<IRoleSchema>('role', RoleSchema);
+export type Role = DataModel<InferSchemaType<typeof RoleSchema>>
+
+const RoleModel = connectionMongo.model<Role & Document>('role', RoleSchema);
 
 export default RoleModel;

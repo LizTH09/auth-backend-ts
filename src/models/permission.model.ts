@@ -1,14 +1,8 @@
-import { Types, Schema } from 'mongoose';
+import { Document, InferSchemaType, Schema } from 'mongoose';
 import { connectionMongo } from '../configs';
+import { DataModel } from '../interfaces/base';
 
-interface IPermissionSchema {
-    _id: Types.ObjectId,
-    code: string,
-    description: string,
-}
-
-const PermissionSchema = new Schema<IPermissionSchema>({
-  _id: Types.ObjectId,
+const PermissionSchema = new Schema({
   code: {
     required: true,
     type: String
@@ -16,6 +10,8 @@ const PermissionSchema = new Schema<IPermissionSchema>({
   description: { type: String },
 });
 
-const PermissionModel = connectionMongo.model<IPermissionSchema>('permission', PermissionSchema);
+export type Permission = DataModel<InferSchemaType<typeof PermissionSchema>>
+
+const PermissionModel = connectionMongo.model<Permission & Document>('permission', PermissionSchema);
 
 export default PermissionModel;
