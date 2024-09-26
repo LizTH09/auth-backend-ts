@@ -5,7 +5,7 @@ import { DataModel } from '../interfaces/base';
 const UserSchema = new Schema({
   birthDay: Date,
   country: { type: String },
-  deletedAt: Date,
+  deletedAt: { type: Date },
   docNumber: { type: String },
   docType: {
     enum: [ 'DNI', 'CE', 'CURP' ],
