@@ -3,6 +3,11 @@ import { connectionMongo } from '../configs';
 import { DataModel } from '../interfaces/base';
 
 const UserSchema = new Schema({
+  accountType: {
+    enum: [ 'LOCAL', 'EXTERNAL' ],
+    required: true,
+    type: String
+  },
   birthDay: { type: Date },
   country: { type: String },
   deletedAt: { type: Date },
