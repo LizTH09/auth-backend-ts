@@ -19,11 +19,15 @@ export interface IUser{
 }
 
 export interface IAuthCode{
-  code: string,
+  code?: string,
   mode: string,
   userId: string 
 }
 
+export interface ITypeAccount{
+  userId: string,
+  type: 'LOCAL' | 'EXTERNAL'
+}
 
 class AuthActuator { 
   async generateRandomCode() {
@@ -59,12 +63,14 @@ class AuthActuator {
     return newUser;
   }
 
-  async sendValidateCode({ code,  mode, userId }: IAuthCode) {
-
+  async sendValidateCode({ mode, userId }: IAuthCode) {
+    const code = await this.generateRandomCode();
+    const expiredDate = dayjs().add(5, 'm').toDate(); 
     // LOGICA DE ENVIO A CORREO
 
     const newCode = AuthCodeModel.create({
       code,
+      expiredDate,
       mode,
       userId
     });
@@ -104,6 +110,20 @@ class AuthActuator {
     ]);
     
     return { codeFinish, message: 'User Activated', userActived };
+  }
+
+  async validateUser (email : string) {
+    const validatedUser = await UserModel.findOne({ email }).lean();
+      
+    if(!(validatedUser && validatedUser?.status === 'ACTIVED')) throw new Error(ERROR.USER_NOT_FOUND);
+
+    return validatedUser;
+  }
+
+  async updateTypeAccount ({ userId, type } : ITypeAccount) {
+    const userTypeUpdated = this.updateDocument(UserModel, userId, { accountType: type });
+    
+    return userTypeUpdated;
   }
 }
 

@@ -1,5 +1,4 @@
 import { Document, InferSchemaType, Schema, Types } from 'mongoose';
-import dayjs from 'dayjs';
 import { connectionMongo } from '../configs';
 import { DataModel } from '../interfaces/base';
 
@@ -9,7 +8,7 @@ const AuthCode = new Schema({
     type: String
   },
   expiredDate: {
-    default: dayjs().add(5, 'm').toDate(),
+    required: true,
     type: Date
   },
   mode: { type: String }, 
