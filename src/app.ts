@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { corsConfig, MORGAN_FORMAT } from './configs';
 import { errorResponse, successResponse } from './utils';
+import { setGlobalContext } from './middlewares/context';
 import mainRouter from './routes';
 
 const app: Application = express();
@@ -13,6 +14,7 @@ app.use(cors(corsConfig));
 app.use(cookieParser());
 
 app.use(express.json());
+app.use(setGlobalContext);
 
 // apply main router
 app.use('/api/v1', mainRouter);

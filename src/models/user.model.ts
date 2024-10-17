@@ -1,10 +1,28 @@
-import { Document, InferSchemaType, Schema, Types } from 'mongoose';
+import { Document, InferSchemaType, Schema } from 'mongoose';
 import { connectionMongo } from '../configs';
 import { DataModel } from '../interfaces/base';
 
+export enum UserStatus {
+  Pending = 'PENDING',
+  Actived = 'ACTIVED',
+  Suspended = 'SUSPENDED',
+  Deleted = 'DELETED'
+}
+
+enum UserDocType{
+  Dni = 'DNI',
+  Ce = 'CE',
+  Curp = 'CURP'
+}
+
+export enum UserAccountType{
+  Local = 'LOCAL',
+  External = 'EXTERNAL',
+}
+
 const UserSchema = new Schema({
   accountType: {
-    enum: [ 'LOCAL', 'EXTERNAL' ],
+    enum: Object.values(UserAccountType),
     required: true,
     type: String
   },
@@ -13,7 +31,7 @@ const UserSchema = new Schema({
   deletedAt: { type: Date },
   docNumber: { type: String },
   docType: {
-    enum: [ 'DNI', 'CE', 'CURP' ],
+    enum: Object.values(UserDocType),
     type: String,
   },
   email: {
@@ -36,14 +54,15 @@ const UserSchema = new Schema({
     type: String
   },
   localAccount: {
-    password: { type: String }
+    password: { type: String },
+    rememberPassword: { type: Boolean },
   },
   phone: { type: String },
   photo: { type: String },
-  roleId: { type: Types.ObjectId },
+  roleId: { type: Schema.Types.ObjectId },
   status: {
-    default: 'PENDING',
-    enum: [ 'ACTIVED', 'DELETED', 'SUSPENDED', 'PENDING' ],
+    default: UserStatus.Pending,
+    enum: Object.values(UserStatus),
     required: true,
     type: String
   }

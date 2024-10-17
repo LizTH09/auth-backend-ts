@@ -2,6 +2,12 @@ import { Document, InferSchemaType, Schema, Types } from 'mongoose';
 import { connectionMongo } from '../configs';
 import { DataModel } from '../interfaces/base';
 
+export enum AuthCodeStatus {
+  Actived = 'ACTIVED',
+  Finished = 'FINISHED',
+  Expired = 'EXPIRED',
+}
+
 const AuthCode = new Schema({
   code: {
     required: true,
@@ -13,8 +19,8 @@ const AuthCode = new Schema({
   },
   mode: { type: String }, 
   status: {
-    default: 'ACTIVED',
-    enum: [ 'ACTIVED', 'FINISHED', 'EXPIRED' ],
+    default: AuthCodeStatus.Actived,
+    enum: Object.values(AuthCodeStatus),
     required: true,
     type: String,
   },
