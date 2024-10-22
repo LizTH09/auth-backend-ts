@@ -70,17 +70,12 @@ class AuthController {
   
         return successResponse({ message: validatedPassword.message, res });
       }
+
+      const response = await AuthActuator.sendValidateCode({ mode: 'LOGIN', userId: user._id.toString() }, req.locals);
   
-      if(user.accountType === UserAccountType.External) {
-        const response = await AuthActuator.sendValidateCode({ mode: 'LOGIN', userId: user._id.toString() }, req.locals);
+      res.cookie('userId', user._id.toString());
   
-        res.cookie('userId', user._id.toString());
-  
-        return successResponse({ message: response.message, res, status: response.status });
-      }
-  
-      return successResponse({ message: 'Validation code sent', res });
-  
+      return successResponse({ message: response.message, res, status: response.status });  
     } catch (error) {
       return errorResponse({ error, res });
     }
@@ -126,7 +121,7 @@ class AuthController {
     try {
       const { code, email, password, mode } = req.body;
 
-      if(!(code || email || password || mode)) throw new Error('Data is missing');
+      if(!code || !email || !password || !mode) throw new Error('Data is missing');
 
       const user = await AuthActuator.validateUser(email);
 

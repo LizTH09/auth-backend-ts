@@ -1,10 +1,10 @@
 import { Request } from 'express';
 import { DataSource } from './DataSource';
-import { API_KEY_MAIL_SERVER } from '../configs/envs';
+import { API_KEY_MAIL_SERVER, API_URL_MAILING } from '../configs/envs';
 
 export class MailServerAPI extends DataSource {
   constructor(req: Request) {
-    const { baseURL } = req;
+    const baseURL = API_URL_MAILING;
     const authorization = req.cookies['accessToken']; 
     
     super(baseURL);
@@ -16,7 +16,7 @@ export class MailServerAPI extends DataSource {
   }
   
   async sendMails(params: unknown): Promise<unknown> {
-    const url = 'http://localhost:4320/api/v1/mailing/sendMails'; 
+    const url = '/api/v1/mailing/sendMails'; 
 
     const response = await this.post(url, params);
     

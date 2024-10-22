@@ -6,9 +6,33 @@ import UserModel from '../models/user.model';
 import RoleModel from '../models/role.model';
 
 interface MyTokenPayload extends JwtPayload {
-    userId: string;
-    email: string;
+  userId: string;
+  email: string;
+}
+
+interface TokenResultSuccess extends MyTokenPayload{
+  expired: false;
+}
+
+interface TokenResultError {
+  expired?: boolean;
+  error?: boolean;
+}
+
+type TokenResult = TokenResultSuccess | TokenResultError;
+
+const verifyToken = (accessToken: string): TokenResult => {
+  try {
+    const decoded = jwt.verify(accessToken, JWT__SECRET_KEY) as MyTokenPayload;
+
+    return { ...decoded, expired: false } ; 
+  } catch (error) {
+    if(error instanceof jwt.TokenExpiredError) 
+      return { expired: true } ; 
+    
+    return { error: true } ; 
   }
+};
 
 export const isAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -16,23 +40,14 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction) =>
     
     if(!accessToken) return errorResponse({ message: 'Access token not found', res, status: 401 }); 
     
-    let userData;
-    
-    try {
-      const decoded = jwt.verify(accessToken, JWT__SECRET_KEY) as MyTokenPayload;
-          
-      userData = { ...decoded, expired: false }; 
-    } catch (error) {
-      if(error instanceof jwt.TokenExpiredError) 
-        return errorResponse({ error, message: 'Token expirado', res, status: 401 });
+    const userData = verifyToken(accessToken);
 
-      return errorResponse({ error, message: 'Invalid token', res, status: 401 });
-    }
-
-    if(userData.expired) 
-      return errorResponse({ message: 'Token expirado', res, status: 401 });
+    if(userData.error || userData.expired) 
+      return errorResponse({ message: 'Error de token', res, status: 401 });
   
-    const user = await UserModel.findById(userData.userId);
+    const userId = (userData as TokenResultSuccess).userId;
+
+    const user = await UserModel.findById(userId);
     
     if(!user) return errorResponse({ message: 'User not found', res, status: 401 });
   
@@ -42,7 +57,7 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction) =>
       now: new Date(),
       role: role,
       user,
-      userId: userData.userId,
+      userId: userId,
     };
     
     return next();

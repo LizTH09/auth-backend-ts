@@ -202,7 +202,7 @@ class AuthActuator {
   async validateUser (email : string) {
     const validatedUser = await UserModel.findOne({ email }).lean();
       
-    if(!(validatedUser?.status === UserStatus.Actived)) throw new Error(ERROR.USER_NOT_FOUND);
+    if(validatedUser?.status !== UserStatus.Actived) throw new Error(ERROR.USER_NOT_FOUND);
 
     return validatedUser;
   }
