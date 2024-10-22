@@ -4,4 +4,6 @@ export const NODE_ENV = process.env.NODE_ENV as string ?? 'development';
 export const SERVER_PORT = process.env.SERVER_PORT as string;
 export const MONGO_CONNECTION_URI = process.env.MONGO_CONNECTION_URI as string;
 export const ALLOW_ORIGINS = process.env.ALLOW_ORIGINS as string;
-export const MORGAN_FORMAT = NODE_ENV === 'production' ? 'common' : 'dev';
+export const JWT__SECRET_KEY = process.env.JWT__SECRET_KEY as string;
+export const API_KEY_MAIL_SERVER = process.env.API_KEY_MAIL_SERVER as string;
+export const API_URL_MAILING = process.env.API_URL_MAILING as string;
